@@ -5,16 +5,21 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export const signInWithGithubAction = async (formData : FormData) => {
+export const signInWithGithubAction = async (formData: FormData) => {
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
-    const { data, error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
-    options :{
- redirectTo:`${origin}/auth/callback`
+
+    options:{
+      redirectTo:`${origin}/auth/callback`
     }
-    
   })
+  console.log(data,origin,error)
+  if(data.url){
+    redirect(data.url)
+  }
+
 }
 
 export const signUpAction = async (formData: FormData) => {
@@ -64,7 +69,6 @@ export const signInAction = async (formData: FormData) => {
   if (error) {
     return encodedRedirect("error", "/sign-in", error.message);
   }
-
   return redirect("/protected");
 };
 
