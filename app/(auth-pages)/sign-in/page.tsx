@@ -13,9 +13,6 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
       <p className="text-sm text-foreground">
       </p>
       <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
-        <div className="flex justify-between items-center">
-          <Label htmlFor="password">Password</Label>
-        </div>
         <SubmitButton pendingText="Signing In..." formAction={signInWithGithubAction}>
           Sign in With Github
         </SubmitButton>
