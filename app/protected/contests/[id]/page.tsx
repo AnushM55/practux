@@ -50,9 +50,10 @@ export default async function Page({
         return QuestionDetails.data?.at(0)
     }))
     console.log(QuestionFetchResult)
+    const contestdata : any = result.data.at?.(0)
     return (
         <>
-            <h1>Contest ID :{id} Name : {result.data.at?.(0)?.contestName} </h1>
+            <h1>Contest ID :{id} Name : {contestdata?.contestName} </h1>
             <br />
             <h1 className="text-2xl font-bold mb-4">Questions</h1>
             <br />
