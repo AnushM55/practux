@@ -42,7 +42,7 @@ export default async function Page({
 
     const { data } = Questionresult
 
-    const QuestionFetchResult = await Promise.all(data.map(async (quesDetails) => {
+    const QuestionFetchResult = await Promise.all(data.map(async (quesDetails:any) => {
 
         const QuestionDetails = await supabase.from('Question').select('*').eq('id', quesDetails["Question-Id"])
         console.log(QuestionDetails.data)
