@@ -24,6 +24,7 @@ const Events = () => {
       try {
         const { data, error } = await supabase.from('Contest').select('*');
         if (error) throw error;
+        console.log(data)
         setContests(data);
       } catch (error) {
         console.error('Error fetching contests:', error);
@@ -36,7 +37,7 @@ const Events = () => {
   }, []);
 
   const handleAttend = (contestId : string) => {
-    router.push(`/contest/${contestId}`);
+    console.log("can attend this contest")
   };
 
   if (loading) return <p>Loading contests...</p>;
