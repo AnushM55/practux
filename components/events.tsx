@@ -1,17 +1,16 @@
 'use client';
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Cardo } from "next/font/google";
-type Contests = {
-  id : string,
-  startTime : Date,
-  contestName : string
+import { redirect, useRouter } from "next/navigation";
 
+type Contests = {
+  id: string,
+  startTime: Date,
+  contestName: string
 }
 
 
-export default function Events()  {
+export default function ContestMenus() {
   const supabase = createClient();
   const [contests, setContests] = useState<Contests[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,8 +33,10 @@ export default function Events()  {
     fetchContests();
   }, []);
 
-  const handleAttend = (contestId : string) => {
+  const handleAttend = (contestId: string) => {
     console.log("can attend this contest")
+    redirect(`protected/contests/${contestId}`)
+
   };
 
   if (loading) return <p>Loading contests...</p>;
@@ -43,17 +44,21 @@ export default function Events()  {
   if (contests.length === 0) return <p>No contests available.</p>;
 
   return (
-    <div className="p-4">
+    <div className="p-4 w-full">
       <h1 className="text-2xl font-bold mb-4">Contests</h1>
       <div className="grid gap-4">
-        {contests.map((contest : Contests) => (
+        {contests.map((contest: Contests) => (
           <div
             key={contest.id}
-            className="p-4 border rounded-lg shadow-md bg-white"
+            className="p-4 border rounded-lg shadow-md bg-black flex justify-between items-center"
           >
-            <h2 className="text-xl font-semibold">{contest.contestName}</h2>
+            {/* Contest Name */}
+            <h2 className="text-xl font-semibold text-white">{contest.contestName}</h2>
+
+            <div className="px-40" />
+            {/* Attend Button */}
             <button
-              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
               onClick={() => handleAttend(contest.id)}
             >
               Attend
