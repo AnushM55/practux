@@ -3,7 +3,7 @@ import { env } from "process";
 
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Cardo } from "next/font/google";
 type Contests = {
   id : string,
