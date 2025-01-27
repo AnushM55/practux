@@ -1,4 +1,3 @@
-"use client";
 import Events from "@/components/events";
 import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
 import { createClient } from "@/utils/supabase/client";
