@@ -15,7 +15,7 @@ type Contests = {
 
 const Events = () => {
   const supabase = createClient();
-  const [contests, setContests] = useState([]);
+  const [contests, setContests] = useState<Contests[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
