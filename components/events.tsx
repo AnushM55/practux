@@ -1,6 +1,4 @@
- "use client";
-import { env } from "process";
-
+'use client';
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -13,7 +11,7 @@ type Contests = {
 }
 
 
-const Events = () => {
+export default function Events()  {
   const supabase = createClient();
   const [contests, setContests] = useState<Contests[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,4 +65,3 @@ const Events = () => {
   );
 };
 
-export default Events;
