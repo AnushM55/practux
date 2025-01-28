@@ -33,9 +33,14 @@ export default function ContestMenus() {
     fetchContests();
   }, []);
 
-  const handleAttend = (contestId: string) => {
-    console.log("can attend this contest")
-    redirect(`protected/contests/${contestId}`)
+  const handleAttend = async (contestId: string) => {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) throw error
+
+    if (!data.user){
+      redirect('/sign-in')
+    }
+    redirect(`/protected/contests/${contestId}`)
 
   };
 

@@ -1,6 +1,7 @@
 import QuestionDisplay from "@/components/questionDisplay"
 import { createClient } from "@/utils/supabase/server"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { table } from "console"
 import { Qahiri } from "next/font/google"
 import { redirect } from "next/navigation"
 import { describe } from "node:test"
@@ -8,6 +9,11 @@ type Contests = {
     id: string,
     startTime: Date,
     contestName: string
+}
+type tableformat = {
+    'User-Id' : string | undefined,
+    'Contest-Id':string,
+    'StartTime':Date
 }
 export default async function Page({
     params,
@@ -18,7 +24,29 @@ export default async function Page({
 }) {
     const id = (await params).id
     const supabase = await createClient();
+    const userResult = await supabase.auth.getUser();
 
+    const existingContestResult = supabase.from("Contest-User-Relation")
+    
+    
+    const datares  = await existingContestResult.select('*').eq('User-Id',userResult.data.user?.id).eq('Contest-Id',id)
+    if (datares.error) {
+      throw datares.error
+    }else if (datares.data.length == 0) {
+      const tableresult = await supabase.from('Contest-User-Relation')
+      console.log("table result ",tableresult)
+      const insertData :tableformat = {
+        "Contest-Id":id,
+        "User-Id":userResult.data.user?.id,
+        "StartTime":new Date(Number(Date.now()))
+
+      }
+      const result = await tableresult.insert(insertData)
+      console.log("Bye result is ",result)
+    } else {
+      console.log(datares.data)
+    }
+     
     type resultType = {
         data: Contests[],
         error: Error
