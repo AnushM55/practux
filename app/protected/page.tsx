@@ -1,6 +1,6 @@
 import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
 import { createClient } from "@/utils/supabase/server";
-import ContestMenus from "@/components/events";
+import ContestMenus from "@/components/Contests";
 
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
