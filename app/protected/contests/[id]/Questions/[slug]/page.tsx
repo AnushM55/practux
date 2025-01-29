@@ -8,14 +8,6 @@ import { remark } from "remark"
 import html from "remark-html"
 
 
-type insertContent = {
-    Contest_Id: string,
-    Question_Id: string,
-    User_Id: string,
-    PointsScored: string,
-    TimeStamp: Date
-}
-
 
 export default async function Page({
     params,
@@ -40,12 +32,13 @@ export default async function Page({
     if (Questionresult.error) throw Questionresult.error
 
     if (!Questionresult.data || Questionresult.data.length < 1) {
-        console.log(Questionresult)
         return <h1> contest {id} doesnt have that question</h1>
     }
 
 
     const pts = Questionresult.data.at(0)?.["points"]
+    const user = await supabase.auth.getUser()
+    const userid = user.data.user?.id
 
     const QuestionDetails = await supabase.from('Question').select('*').eq('id', slug)
 
@@ -61,7 +54,6 @@ export default async function Page({
     }
     const testcaseContent = await supabase.from('TestCase').select('*').eq('id', inputdata["id"])
     if (testcaseContent.error) {
-        console.log("errors found ")
         throw testcaseContent.error
     }
 
@@ -72,34 +64,24 @@ export default async function Page({
     if (inputData === undefined || inputData["Input"] === undefined) {
 
         throw Error("No data fetched")
+    }
+
+
+    if (userid !== undefined) {
+        return (
+            <>
+                <h1>Contest ID :{id} Qn Name : {slug}  Points : {pts}</h1>
+                <br />
+                <h1 className="text-2xl font-bold mb-4">Description</h1>
+                <div className="whitespace-pre-line" dangerouslySetInnerHTML={{ __html: processedContent.toString() }} />
+                <TestCodeAndSubmission Points={pts} ContestId={id} Question_Id={slug} UserId={userid} GivenInput={inputData["Input"]} containsInput={(inputData["Input"] !== '-') ? true : false} testcaseNumber={1} testCaseId={inputData["id"]} />
+                <br />
+            </>
+        )
     } else {
-        console.log("NO ERROR I THINK", inputData)
-    }
-
-
-    const onSubmitCallback = async () => {
-        const user = await supabase.auth.getUser()
-        const userid = user.data.user?.id
-        if (userid != null) {
-            const content: insertContent = {
-                Contest_Id: id,
-                Question_Id: slug,
-                TimeStamp: new Date(Date.now()),
-                PointsScored: pts,
-                User_Id: userid
-            }
-            await supabase.from('Submissions').insert(content)
-            redirect(`/protected/contests/${id}`)
-        }
-    }
-    return (
-        <>
-            <h1>Contest ID :{id} Qn Name : {slug}  Points : {pts}</h1>
-            <br />
-            <h1 className="text-2xl font-bold mb-4">Description</h1>
-            <div className="whitespace-pre-line" dangerouslySetInnerHTML={{ __html: processedContent.toString() }} />
-            <TestCodeAndSubmission  GivenInput={inputData["Input"]} containsInput={(inputData["Input"] !== '-')?true:false} testcaseNumber={1} testCaseId={inputData["id"]} />
-            <br />
+        return (<>
+            <h1>PLEASE LOGIN AGAIN</h1>
         </>
-    )
+        )
+    }
 }

@@ -34,7 +34,6 @@ export default async function Page({
       throw datares.error
     }else if (datares.data.length == 0) {
       const tableresult = await supabase.from('Contest-User-Relation')
-      console.log("table result ",tableresult)
       const insertData :tableformat = {
         "Contest-Id":id,
         "User-Id":userResult.data.user?.id,
@@ -42,10 +41,11 @@ export default async function Page({
 
       }
       const result = await tableresult.insert(insertData)
-      console.log("Bye result is ",result)
-    } else {
-      console.log(datares.data)
+      if (result.error){
+        throw result.error
+      }
     }
+     
      
     type resultType = {
         data: Contests[],
@@ -64,7 +64,6 @@ export default async function Page({
     if (Questionresult.error) throw Questionresult.error
 
     if (!Questionresult.data || Questionresult.data.length < 1) {
-        console.log(Questionresult)
         return <h1> contest {id} doesnt have any question yet</h1>
     }
 
@@ -73,11 +72,9 @@ export default async function Page({
     const QuestionFetchResult = await Promise.all(data.map(async (quesDetails:any) => {
 
         const QuestionDetails = await supabase.from('Question').select('*').eq('id', quesDetails["Question-Id"])
-        console.log(QuestionDetails.data)
 
         return QuestionDetails.data?.at(0)
     }))
-    console.log(QuestionFetchResult)
     const contestdata : any = result.data.at?.(0)
     return (
         <>
